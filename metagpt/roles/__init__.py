@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -16,7 +17,6 @@ from metagpt.roles.seacher import Searcher
 from metagpt.roles.sales import Sales
 from metagpt.roles.customer_service import CustomerService
 
-
 __all__ = [
     "Role",
     "Architect",
@@ -27,4 +27,6 @@ __all__ = [
     "Searcher",
     "Sales",
     "CustomerService",
+    "LegalAdvisor",
+    "ComplianceOfficer",
 ]

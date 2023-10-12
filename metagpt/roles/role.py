@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 
 # from metagpt.environment import Environment
 from metagpt.config import CONFIG
-from metagpt.actions import Action, ActionOutput
+from metagpt.actions.action import Action, ActionOutput
 from metagpt.llm import LLM
 from metagpt.logs import logger
 from metagpt.memory import Memory, LongTermMemory

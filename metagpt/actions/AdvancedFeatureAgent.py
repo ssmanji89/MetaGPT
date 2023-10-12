@@ -1,7 +1,7 @@
 
 # AdvancedFeatureAgent for MetaGPT Project
 
-from metagpt.actions import Action
+from metagpt.actions.action import Action
 from metagpt.roles import Role
 from metagpt.schema import Message
 

@@ -1,18 +1,29 @@
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import asyncio
-
 import fire
-
 from metagpt.roles import (
     Architect,
     Engineer,
     ProductManager,
     ProjectManager,
     QaEngineer,
+    DataAnalyst,
+    QAAgent,
+    SecurityAnalyst,
+    UXDesigner,
+    DevOpsEngineer,
+    CommunityManager,
+    LegalAdvisor,
+    ComplianceOfficer
+)
+from metagpt.agents import (
+    RegulatoryAgent,
+    ContractManagementAgent
 )
 from metagpt.software_company import SoftwareCompany
-
+from metagpt.schema import Message
 
 async def startup(
     idea: str,
@@ -21,52 +32,70 @@ async def startup(
     code_review: bool = False,
     run_tests: bool = False,
     implement: bool = True,
+    run_data_analysis: bool = False,
+    run_security_scan: bool = True,
+    manage_community: bool = False,
+    financial_planning: bool = False,
+    marketing_and_sales: bool = True,
+    human_resources: bool = False,
+    legal_and_compliance: bool = True
 ):
     """Run a startup. Be a boss."""
     company = SoftwareCompany()
-    company.hire(
-        [
-            ProductManager(),
-            Architect(),
-            ProjectManager(),
-        ]
-    )
-
-    # if implement or code_review
-    if implement or code_review:
-        # developing features: implement the idea
-        company.hire([Engineer(n_borg=5, use_code_review=code_review)])
-
-    if run_tests:
-        # developing features: run tests on the spot and identify bugs
-        # (bug fixing capability comes soon!)
-        company.hire([QaEngineer()])
-
-    company.invest(investment)
+    
+    # Initialize and hire roles
+    roles = [
+        Architect(),
+        Engineer(),
+        ProductManager(),
+        ProjectManager(),
+        QaEngineer(),
+        DataAnalyst(),
+        QAAgent(),
+        SecurityAnalyst(),
+        UXDesigner(),
+        DevOpsEngineer(),
+        CommunityManager(),
+        LegalAdvisor(),
+        ComplianceOfficer(),
+        RegulatoryAgent(),
+        ContractManagementAgent()
+    ]
+    company.hire(roles)
+    # Start a project with an idea
     company.start_project(idea)
-    await company.run(n_round=n_round)
 
+    # Legal and Compliance
+    if legal_and_compliance:
+        await company.environment.publish_message(Message(role="LegalAdvisor", content="Initial Legal Review"))
+        await company.environment.publish_message(Message(role="ComplianceOfficer", content="Initial Compliance Check"))
+        await company.environment.publish_message(Message(role="RegulatoryAgent", content="Update on Regulatory Changes"))
+        await company.environment.publish_message(Message(role="ContractManagementAgent", content="Contract Management"))
+        
+    # Product Development Lifecycle
+    if implement:
+        await company.environment.publish_message(Message(role="Architect", content="Design Architecture"))
+        await company.environment.publish_message(Message(role="Engineer", content="Implement Design"))
+        await company.environment.publish_message(Message(role="UXDesigner", content="Design UI/UX"))
+        await company.environment.publish_message(Message(role="DevOpsEngineer", content="Setup CI/CD"))
+        await company.environment.publish_message(Message(role="QAAgent", content="Run Tests"))
 
-def main(
-    idea: str,
-    investment: float = 3.0,
-    n_round: int = 5,
-    code_review: bool = True,
-    run_tests: bool = False,
-    implement: bool = True,
-):
-    """
-    We are a software startup comprised of AI. By investing in us,
-    you are empowering a future filled with limitless possibilities.
-    :param idea: Your innovative idea, such as "Creating a snake game."
-    :param investment: As an investor, you have the opportunity to contribute
-    a certain dollar amount to this AI company.
-    :param n_round:
-    :param code_review: Whether to use code review.
-    :return:
-    """
-    asyncio.run(startup(idea, investment, n_round, code_review, run_tests, implement))
+    # Data-Driven Decision Making
+    if run_data_analysis:
+        await company.environment.publish_message(Message(role="DataAnalyst", content="Analyze Market Data"))
+        await company.environment.publish_message(Message(role="ProductManager", content="Decide Features"))
 
+    # Security and Compliance
+    if run_security_scan:
+        await company.environment.publish_message(Message(role="SecurityAnalyst", content="Run Security Scan"))
+        await company.environment.publish_message(Message(role="DevOpsEngineer", content="Ensure Compliance"))
+
+    # Community Management
+    if manage_community:
+        await company.environment.publish_message(Message(role="CommunityManager", content="Manage Community"))
+
+    # Your additional business logic here
+    # ...
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    fire.Fire(startup)

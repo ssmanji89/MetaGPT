@@ -2,9 +2,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import asyncio
-
 import fire
-
 from metagpt.roles import (
     Architect,
     Engineer,
@@ -17,8 +15,15 @@ from metagpt.roles import (
     UXDesigner,
     DevOpsEngineer,
     CommunityManager,
+    LegalAdvisor,
+    ComplianceOfficer
+)
+from metagpt.agents import (
+    RegulatoryAgent,
+    ContractManagementAgent
 )
 from metagpt.software_company import SoftwareCompany
+from metagpt.schema import Message
 
 async def startup(
     idea: str,
@@ -30,24 +35,72 @@ async def startup(
     run_data_analysis: bool = False,
     run_security_scan: bool = False,
     manage_community: bool = False,
+    financial_planning: bool = False,
+    marketing_and_sales: bool = False,
+    human_resources: bool = False,
+    legal_and_compliance: bool = False
 ):
     """Run a startup. Be a boss."""
     company = SoftwareCompany()
     
-    # Initialize roles
-    company.add_role(Architect())
-    company.add_role(Engineer())
-    company.add_role(ProductManager())
-    company.add_role(ProjectManager())
-    company.add_role(QaEngineer())
-    company.add_role(DataAnalyst())
-    company.add_role(QAAgent())
-    company.add_role(SecurityAnalyst())
-    company.add_role(UXDesigner())
-    company.add_role(DevOpsEngineer())
-    company.add_role(CommunityManager())
+    # Initialize and hire roles
+    roles = [
+        Architect(),
+        Engineer(),
+        ProductManager(),
+        ProjectManager(),
+        QaEngineer(),
+        DataAnalyst(),
+        QAAgent(),
+        SecurityAnalyst(),
+        UXDesigner(),
+        DevOpsEngineer(),
+        CommunityManager(),
+        LegalAdvisor(),
+        ComplianceOfficer
+    ]
+    company.hire(roles)
 
-    # Your business logic here
+    # Initialize agents
+    agents = [
+        RegulatoryAgent(),
+        ContractManagementAgent()
+    ]
+    company.hire(agents)
+
+    # Start a project with an idea
+    company.start_project(idea)
+
+    # Legal and Compliance
+    if legal_and_compliance:
+        await company.environment.publish_message(Message(role="LegalAdvisor", content="Initial Legal Review"))
+        await company.environment.publish_message(Message(role="ComplianceOfficer", content="Initial Compliance Check"))
+        await company.environment.publish_message(Message(role="RegulatoryAgent", content="Update on Regulatory Changes"))
+        await company.environment.publish_message(Message(role="ContractManagementAgent", content="Contract Management"))
+        
+    # Product Development Lifecycle
+    if implement:
+        await company.environment.publish_message(Message(role="Architect", content="Design Architecture"))
+        await company.environment.publish_message(Message(role="Engineer", content="Implement Design"))
+        await company.environment.publish_message(Message(role="UXDesigner", content="Design UI/UX"))
+        await company.environment.publish_message(Message(role="DevOpsEngineer", content="Setup CI/CD"))
+        await company.environment.publish_message(Message(role="QAAgent", content="Run Tests"))
+
+    # Data-Driven Decision Making
+    if run_data_analysis:
+        await company.environment.publish_message(Message(role="DataAnalyst", content="Analyze Market Data"))
+        await company.environment.publish_message(Message(role="ProductManager", content="Decide Features"))
+
+    # Security and Compliance
+    if run_security_scan:
+        await company.environment.publish_message(Message(role="SecurityAnalyst", content="Run Security Scan"))
+        await company.environment.publish_message(Message(role="DevOpsEngineer", content="Ensure Compliance"))
+
+    # Community Management
+    if manage_community:
+        await company.environment.publish_message(Message(role="CommunityManager", content="Manage Community"))
+
+    # Your additional business logic here
     # ...
 
 if __name__ == "__main__":
